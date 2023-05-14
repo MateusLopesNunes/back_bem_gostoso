@@ -23,5 +23,6 @@ router.register("", views.UserViewSet, basename="users")
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('create', views.CreateUser.as_view())
+    path('create', views.CreateUser.as_view()),
+    path('reset_password', views.reset_password),
 ]

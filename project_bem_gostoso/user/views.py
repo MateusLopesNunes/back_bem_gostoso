@@ -1,4 +1,5 @@
 from datetime import datetime
+from random import choice
 from django.shortcuts import render
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.contrib.auth import login, authenticate
@@ -10,6 +11,25 @@ from .serializers import UserSerializer, UserCreateSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+import string
+from django.core.mail import EmailMessage
+
+
+#Utils
+def generate_password():
+    size = 10
+    values = string.ascii_letters + string.digits
+    new_password = ''
+    for i in range(size):
+        new_password += choice(values)
+    return new_password
+
+def send_email(message, title, user_email):
+    to_email = user_email
+    email = EmailMessage(
+                title, message, to=[to_email]
+    )
+    email.send()
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -68,3 +88,24 @@ def login(request):
         return Response({'error':'Usuário logado com sucesso'}, status=status.HTTP_200_OK)
     return Response({'error': 'Usuário ou senha incorretos'}, status=status.HTTP_401_UNAUTHORIZED)
 
+
+@api_view(['POST'])
+def reset_password(request):
+    email = request.data['email']
+    username = request.data['username']
+
+    userByEmail = User.objects.filter(email=email)
+    userByUsername = User.objects.filter(username=username)
+    
+    if userByEmail and userByEmail[0].pk == userByUsername[0].pk:
+        user = userByEmail[0]
+        new_password = generate_password()
+        user.set_password(new_password)
+        user.save()
+
+        mail_subject = 'Recuperação de senha'
+        message = f'Sua nova senha é: {new_password}'
+        send_email(message, mail_subject, user.email)
+        return Response({'msg': 'A sua nova senha foi enviada para seu email'}, status=status.HTTP_200_OK)
+
+    return Response({'error': 'Email ou username inválidos'}, status=status.HTTP_400_BAD_REQUEST)
