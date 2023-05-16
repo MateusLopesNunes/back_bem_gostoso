@@ -65,8 +65,8 @@ class CreateUser(generics.CreateAPIView):
                 telephone = data['telephone'],
                 email = data['email'],
                 is_active = True,
-                is_superuser = False,
-                is_staff = False
+                is_superuser = True,
+                is_staff = True
             )
             user.set_password(data['password'])
             user.save()
@@ -82,11 +82,10 @@ def login(request):
     email = request.data['email']
     password = request.data['password']
 
-    #return Response({'error': password}, status=status.HTTP_401_UNAUTHORIZED)
     user = authenticate(request, email=email, password=password)
+    user_id = user.pk
     if user is not None:
-        #login(request, user)
-        return Response({'msg':'Usuário logado com sucesso'}, status=status.HTTP_200_OK)
+        return Response({'msg':'Usuário logado com sucesso', 'userId': user_id }, status=status.HTTP_200_OK)
     return Response({'error': 'Usuário ou senha incorretos'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
