@@ -3,8 +3,10 @@ from . import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register("", views.CategoryViewSet, basename="categories")
+router.register("category", views.CategoryViewSet, basename="categories")
+router.register("recipe", views.RecipeViewSet, basename="recipes")
+
 
 urlpatterns = [
-    path('category/', include(router.urls)),
+    path('', include(router.urls)),
 ]

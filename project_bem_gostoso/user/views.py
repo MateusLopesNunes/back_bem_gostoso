@@ -7,7 +7,7 @@ from rest_framework.authentication import TokenAuthentication
 
 from rest_framework import viewsets, generics
 from .models import User
-from .serializers import UserSerializer, UserCreateSerializer
+from .serializers import UserSerializer, UserCreateSerializer, UserUpdateSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -33,18 +33,19 @@ def send_email(message, title, user_email):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
             return UserSerializer
-        elif self.action == 'create' or self.action == 'update' or self.action == 'partial_update': 
+        elif self.action == 'create': 
             return UserCreateSerializer
+        elif self.action == 'update' or self.action == 'partial_update':
+            return UserUpdateSerializer
     
     def perform_update(self, serializer):
         instance = serializer.save()
-        instance.set_password(instance.password)
         instance.updated_at = datetime.now()
         instance.save()
 
