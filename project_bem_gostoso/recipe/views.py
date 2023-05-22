@@ -4,6 +4,8 @@ from .models import Recipe, Category, Ingredient
 from user.models import User
 from .serializers import CategorySerializer, RecipeSerializer, RecipeCreateSerializer
 from rest_framework.response import Response
+from rest_framework import status
+
 
 def manipulation_list_ingredient(ingredients_string):
     products_format = ingredients_string.replace('[', '')
@@ -32,17 +34,20 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         ingredients = manipulation_list_ingredient(req['ingredient'])
 
-        recipe = Recipe(
-            title = req['title'],
-            number_of_portion = req['number_of_portion'],
-            preparation_method = req['preparation_method'],
-            preparation_time = req['preparation_time'],
-            #recipe_image = req['recipe_image'],
-            category = category[0],
-            user = user[0],
-        )
+        try:
+            recipe = Recipe(
+                title = req['title'],
+                number_of_portion = req['number_of_portion'],
+                preparation_method = req['preparation_method'],
+                preparation_time = req['preparation_time'],
+                #recipe_image = req['recipe_image'],
+                category = category[0],
+                user = user[0],
+            )
+        except:
+            return Response({"error": "Erro inesperado"}, status=status.HTTP_400_BAD_REQUEST)
+
         recipe.ingredients.append(ingredients)
         recipe.save()
 
-        return Response({'msg': ingredients})
-        #return Response({'msg': 'Receita cadastrada com sucesso'})
+        return Response({'msg': 'Receita cadastrada com sucesso'})
