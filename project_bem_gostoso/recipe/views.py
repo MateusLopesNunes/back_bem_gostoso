@@ -37,7 +37,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             number_of_portion = req['number_of_portion'],
             preparation_method = req['preparation_method'],
             preparation_time = req['preparation_time'],
-            recipe_image = req['recipe_image'],
+            #recipe_image = req['recipe_image'],
             category = category[0],
             user = user[0],
         )
