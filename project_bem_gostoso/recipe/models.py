@@ -13,7 +13,7 @@ class Recipe(models.Model):
     preparation_time = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True)
-    recipe_image = models.ImageField(upload_to='recipe/')
+    recipe_image = models.ImageField(upload_to='recipe/', blank=True, null=True, default='default/índice.png')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     ingredients = []
