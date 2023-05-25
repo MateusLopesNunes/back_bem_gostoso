@@ -5,7 +5,7 @@ class User(AbstractUser):
     username = models.CharField(max_length=150)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
-    birth_date = models.DateTimeField()
+    birth_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True)
     telephone = models.CharField(max_length=15)
