@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'user',
     'recipe',
-    'drf_yasg'
+    'drf_yasg',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -90,6 +91,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         #'rest_framework.authentication.SessionAuthentication',
     ]
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 

@@ -5,6 +5,7 @@ from user.models import User
 from .serializers import CategorySerializer, RecipeSerializer, RecipeCreateSerializer
 from rest_framework.response import Response
 from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 def manipulation_list_ingredient(ingredients_string):
@@ -20,6 +21,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category', 'user']
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
@@ -32,8 +35,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         category = Category.objects.filter(id=req['category'])
         user = User.objects.filter(id=req['user'])
 
-        ingredients = manipulation_list_ingredient(req['ingredient'])
-
         try:
             recipe = Recipe(
                 title = req['title'],
@@ -44,10 +45,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 category = category[0],
                 user = user[0],
             )
+            ingredients_list = manipulation_list_ingredient(req['ingredient'])
+            for ingredient in ingredients_list:
+                recipe.ingredients.append(ingredient)
+
         except:
             return Response({"error": "Erro inesperado"}, status=status.HTTP_400_BAD_REQUEST)
 
-        recipe.ingredients.append(ingredients)
         recipe.save()
 
         return Response({'msg': 'Receita cadastrada com sucesso'})
