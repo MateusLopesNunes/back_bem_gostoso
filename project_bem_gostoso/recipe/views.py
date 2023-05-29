@@ -46,12 +46,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 user = user[0],
             )
             ingredients_list = manipulation_list_ingredient(req['ingredient'])
-            for ingredient in ingredients_list:
-                recipe.ingredients.append(ingredient)
-
         except:
             return Response({"error": "Erro inesperado"}, status=status.HTTP_400_BAD_REQUEST)
 
         recipe.save()
+
+        for ingredient in ingredients_list:
+            Ingredient(name=ingredient, recipe=recipe)
 
         return Response({'msg': 'Receita cadastrada com sucesso'})
