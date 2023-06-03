@@ -1,4 +1,4 @@
-from .models import Category, Recipe
+from .models import Category, Recipe, Ingredient_recipe
 from rest_framework import serializers
 
 
@@ -6,6 +6,12 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
+        depth = 5
+
+class Ingredient_recipe_serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredient_recipe
+        fields = ['id', 'recipe', 'ingredient']
         depth = 5
 
 class RecipeSerializer(serializers.ModelSerializer):

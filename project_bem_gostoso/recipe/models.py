@@ -18,7 +18,10 @@ class Recipe(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     ingredients = []
 
-
 class Ingredient(models.Model):
     name = models.CharField(max_length=100)
+    #recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=False)
+
+class Ingredient_recipe(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=False)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, null=False)
