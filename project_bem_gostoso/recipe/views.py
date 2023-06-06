@@ -4,7 +4,7 @@ from .models import Recipe, Category
 from user.models import User
 from .serializers import CategorySerializer, RecipeSerializer, RecipeCreateSerializer
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
@@ -21,8 +21,9 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['category', 'user']
+    search_fields = ['title']
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
